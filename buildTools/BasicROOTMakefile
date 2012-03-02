@@ -56,11 +56,10 @@ endif
 
 $(BUILDDIRCONF):
 	@if [ ! -d $(BUILDDIR) ]; then $(mkdir_p) $(BUILDDIR); fi
-	@echo "Make"
 	@touch $@
 
 $(BUILDDIR).depend depend: $(SOURCES) $(BUILDDIRCONF)
-	@echo Checking dependencies...
+	@echo "Checking dependencies......"
 	@$(CXX) -M $(CXXFLAGS) $(INCLUDEFLAGS) $(SOURCES) > $@ 
 
 
