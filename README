@@ -6,3 +6,9 @@ ROOT.
 
 M. Marino, 2012
 
+Installation:
+
+Generally,
+
+./configure
+make [-j#]
