@@ -1,0 +1,99 @@
+# This Makefile needs the following variables defined if the defaults are
+# not suitable (see code)
+#  SOURCES -> Source files needed for compilation and auto-generation of deps
+#  OBJECTS -> .o files needed
+#  DICTHFILES -> Headers needed to generate the root dictionary
+#
+# Optionally, add or modify the following variables
+#  INCLUDEFLAGS
+#  LIBFLAGS
+
+
+BUILDDIR := ../build/
+LIBDIR   := ../lib/
+
+packageBase    := $(shell pwd)
+packageName    := $(notdir $(packageBase))
+SHLIB          := $(LIBDIR)libWave$(packageName).$(SHREXT)
+ROOTDICTCCNAME := $(BUILDDIR)Wave$(packageName)DICT.C
+ROOTDICTHHNAME := $(BUILDDIR)Wave$(packageName)DICT.h
+ROOTDICTOBJECT := $(ROOTDICTCCNAME:.C=.o)
+INCLUDEFLAGS += $(DEFS) $(ROOT_INCLUDE) -I$(packageBase)
+LIBFLAGS += $(ROOT_LIBS) 
+BUILDDIRCONF := $(BUILDDIR).build
+
+# NOLINKDEF explicity tells us not to make rootify a directory 
+ifndef NOLINKDEF 
+# Check to see if either LINKDEF is set or if there's a manual one
+  ifndef LINKDEF
+    LINKDEF    := $(wildcard $(SOURCEDIR)/*LinkDef.h)
+  endif
+  ifndef LINKDEF
+    # use the auto-linkdef
+    AUTOLINKDEF  := $(BUILDDIR)LinkDef_$(packageName).h
+    LINKDEF      := $(AUTOLINKDEF)
+    DICTHFILES   := $(wildcard $(packageBase)/*.hh) 
+    LINKDEFIN    := $(wildcard $(packageBase)/*LinkDef.h.in)
+  endif
+endif
+
+
+SOURCES := $(wildcard *.cc)
+OBJECTS := $(addprefix $(BUILDDIR), $(SOURCES:.cc=.o))
+
+.PHONY: all depend lib clean static shared
+
+all: lib
+
+lib: shared
+
+shared: $(SHLIB)
+
+ifneq ($(MAKECMDGOALS),clean)
+-include $(BUILDDIR).depend
+endif
+
+
+$(BUILDDIRCONF):
+	@if [ ! -d $(BUILDDIR) ]; then $(mkdir_p) $(BUILDDIR); fi
+	@echo "Make"
+	@touch $@
+
+$(BUILDDIR).depend depend: $(SOURCES) $(BUILDDIRCONF)
+	@echo Checking dependencies...
+	@$(CXX) -M $(CXXFLAGS) $(INCLUDEFLAGS) $(SOURCES) > $@ 
+
+
+$(BUILDDIR)%.o: %.cc 
+	@echo "Compiling file............. $(<F)"
+	@$(CXX) -c $(CXXFLAGS) $(INCLUDEFLAGS) $< -o $@ 
+
+%.o: %.C
+	@echo "Compiling file............. $(<F)"
+	@$(CXX) -c $(CXXFLAGS) $(INCLUDEFLAGS) $< -o $@ 
+
+$(ROOTDICTCCNAME): $(DICTHFILES) $(AUTOLINKDEF) 
+	@echo "Rootifying files........... $(@F)"
+	@rm -f $(ROOTDICTCCNAME) $(ROOTDICTHHNAME) 
+	@$(ROOTCINT) $(ROOTDICTCCNAME) -c -p $(CXXFLAGS) $(ROOTDICTINCLUDE) $(INCLUDEFLAGS) $^ 
+ 
+$(SHLIB): $(OBJECTS) $(ROOTDICTOBJECT)
+	@if [ ! -d $(LIBDIR) ]; then $(mkdir_p) $(LIBDIR); fi
+	@echo "Building library........... $(@F)"
+	@$(SOMAKER) $(SOFLAGS)$(@F) -Wl,-rpath,$(ORIGINFLAGS)\
+         -o $(SHLIB) $^ $(LIBFLAGS)
+
+clean:
+	@rm -f $(BUILDDIR)*.o $(BUILDDIR).depend 
+	@rm -f $(ROOTDICTCCNAME) $(ROOTDICTHHNAME) $(AUTOLINKDEF)
+	@rm -f $(SHLIB)
+
+$(AUTOLINKDEF): $(LINKDEFIN) $(DICTHFILES) 
+	@echo "Auto-making Linkdef........ $(@F)"
+	@$(PYTHON) ../buildTools/makeLinkDef.py\
+        --output=$(@)                 \
+        --basebuild=$(packageBase)    \
+        --input_linkdef=$(LINKDEFIN) $(DICTHFILES)
+
+
+
