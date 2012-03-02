@@ -1,0 +1,18 @@
+// Appending to auto-generated LinkDef.h
+// The following is to ensure that these functions/classes are defined for
+// scripts in ROOT/pyROOT.
+#pragma link C++ class TTemplWaveform<Double_t>+;
+#pragma link C++ class TTemplWaveform<Float_t>+;
+#pragma link C++ class TTemplWaveform<Int_t>+;
+#pragma link C++ class TTemplWaveform<complex<double> >+;
+#pragma link C++ class TTemplWaveform<unsigned long>+;
+#pragma link C++ class TTemplWaveform<unsigned int>+;
+#pragma link C++ class TTemplWaveform<Char_t>+;
+
+#pragma link C++ function TTemplWaveform<Int_t>::Convert<Double_t>;
+#pragma link C++ function TTemplWaveform<Int_t>::Convert<Float_t>;
+#pragma link C++ function TTemplWaveform<Double_t>::Convert<Int_t>;
+#pragma link C++ function TTemplWaveform<Float_t>::Convert<Int_t>;
+#pragma link C++ function TTemplWaveform<Double_t>::operator+=<Double_t>;
+#pragma link C++ function TTemplWaveform<complex<double> >::operator+=<complex<double> >;
+
