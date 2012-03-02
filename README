@@ -1,0 +1,8 @@
+TWaveform
+
+ROOT-based framework to save waveforms.  This is work based on my experience
+with Majorana and EXO in developing how to save and deal with waveforms in
+ROOT.  
+
+M. Marino, 2012
+
