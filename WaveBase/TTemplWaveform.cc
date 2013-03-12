@@ -278,6 +278,7 @@ void TTemplWaveform<_Tp>::Append(const TTemplWaveform<_Tp>& wf)
 //______________________________________________________________________________
 // The following are necessary to ensure that the above functions are generated.
 template class TTemplWaveform<Int_t>; 
+template class TTemplWaveform<UShort_t>; 
 template class TTemplWaveform<Double_t>; 
 template class TTemplWaveform<Float_t>; 
 template class TTemplWaveform<Char_t>; 

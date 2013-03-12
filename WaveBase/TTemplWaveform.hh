@@ -329,6 +329,7 @@ class TTemplWaveform : public TObject {
 
 typedef TTemplWaveform<Double_t> TDoubleWaveform; 
 typedef TTemplWaveform<Int_t>    TIntWaveform;
+typedef TTemplWaveform<UShort_t> TUShortWaveform;
 typedef TTemplWaveform<Float_t>  TFloatWaveform;
 typedef TTemplWaveform<size_t>   TLocationWaveform;   // Should not be saved because size_t is system dependent
 typedef TTemplWaveform<Char_t>   TBoolWaveform;   
