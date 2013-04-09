@@ -15705,6 +15705,7 @@ if test "$ac_res" != no; then
   HAVE_FFTW=yes
                       USE_ROOT_FFTW=yes
                       FFTW_LIBS="FFTW"
+                      ROOTLIBS="$ROOTLIBS -lFFTW"
                       { $as_echo "$as_me:$LINENO: Using ROOTs FFTW library" >&5
 $as_echo "$as_me: Using ROOTs FFTW library" >&6;}
 
