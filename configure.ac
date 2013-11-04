@@ -114,14 +114,18 @@ AS_IF([test x"$with_fftw" = xyes],
                      [HAVE_FFTW=yes
                       USE_ROOT_FFTW=yes
                       FFTW_LIBS="FFTW"
-                      ROOT_LIBS="$ROOT_LIBS -lFFTW"
+                      LIBS="$LIBS -lFFTW"
                       AC_MSG_NOTICE([Using ROOTs FFTW library])
                       ], [], [-lCore -lCint -ldl])
                    , [], [-lCore -lCint -ldl])
                  , [], [-lCore -lCint -ldl])
                , [], [-lCore -lCint -ldl])
-             LIBS="$save_LIBS"
-             LDFLAGS="$save_LDFLAGS"
+             AS_IF([test x"$USE_ROOT_FFTW" != xyes],
+               [
+                 LIBS="$save_LIBS"
+                 LDFLAGS="$save_LDFLAGS"
+               ]
+             )
            ] 
          ) 
     
