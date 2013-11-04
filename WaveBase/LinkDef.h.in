@@ -11,6 +11,7 @@
 #pragma link C++ class TTemplWaveform<Char_t>+;
 
 #pragma link C++ function TTemplWaveform<Int_t>::Convert<Double_t>;
+#pragma link C++ function TTemplWaveform<UShort_t>::Convert<Double_t>;
 #pragma link C++ function TTemplWaveform<Int_t>::Convert<Float_t>;
 #pragma link C++ function TTemplWaveform<Double_t>::Convert<Int_t>;
 #pragma link C++ function TTemplWaveform<Float_t>::Convert<Int_t>;

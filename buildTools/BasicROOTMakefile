@@ -19,7 +19,7 @@ ROOTDICTCCNAME := $(BUILDDIR)Wave$(packageName)DICT.C
 ROOTDICTHHNAME := $(BUILDDIR)Wave$(packageName)DICT.h
 ROOTDICTOBJECT := $(ROOTDICTCCNAME:.C=.o)
 INCLUDEFLAGS += $(DEFS) $(ROOT_INCLUDE) -I$(packageBase)
-LIBFLAGS += $(ROOT_LIBS) 
+LIBFLAGS += $(ROOT_LIBS) $(LIBS) 
 BUILDDIRCONF := $(BUILDDIR).build
 
 # NOLINKDEF explicity tells us not to make rootify a directory 
@@ -79,7 +79,7 @@ $(ROOTDICTCCNAME): $(DICTHFILES) $(AUTOLINKDEF)
 $(SHLIB): $(OBJECTS) $(ROOTDICTOBJECT)
 	@if [ ! -d $(LIBDIR) ]; then $(mkdir_p) $(LIBDIR); fi
 	@echo "Building library........... $(@F)"
-	@$(SOMAKER) $(SOFLAGS)$(@F) -Wl,-rpath,$(ORIGINFLAGS)\
+	$(SOMAKER) $(SOFLAGS)$(@F) -Wl,-rpath,$(ORIGINFLAGS)\
          -o $(SHLIB) $^ $(LIBFLAGS)
 
 clean:
