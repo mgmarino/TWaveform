@@ -79,7 +79,7 @@ $(ROOTDICTCCNAME): $(DICTHFILES) $(AUTOLINKDEF)
 $(SHLIB): $(OBJECTS) $(ROOTDICTOBJECT)
 	@if [ ! -d $(LIBDIR) ]; then $(mkdir_p) $(LIBDIR); fi
 	@echo "Building library........... $(@F)"
-	$(SOMAKER) $(SOFLAGS)$(@F) -Wl,-rpath,$(ORIGINFLAGS)\
+	@$(SOMAKER) $(SOFLAGS)$(@F) -Wl,-rpath,$(ORIGINFLAGS)\
          -o $(SHLIB) $^ $(LIBFLAGS)
 
 clean:
