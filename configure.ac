@@ -114,7 +114,7 @@ AS_IF([test x"$with_fftw" = xyes],
                      [HAVE_FFTW=yes
                       USE_ROOT_FFTW=yes
                       FFTW_LIBS="FFTW"
-                      ROOTLIBS="$ROOTLIBS -lFFTW"
+                      ROOT_LIBS="$ROOT_LIBS -lFFTW"
                       AC_MSG_NOTICE([Using ROOTs FFTW library])
                       ], [], [-lCore -lCint -ldl])
                    , [], [-lCore -lCint -ldl])
@@ -242,7 +242,6 @@ dnl AC_SUBST(LDFLAGS)
 AC_OUTPUT_MAKE_DEFS
 AX_DEFS=$DEFS
 AC_SUBST(AX_DEFS)
-AC_SUBST(LIBS)
 # rootcint has issues with some of the defines, in particular those that define
 # the arguments of the select function.  Therefore, we remove those defines and
 # add the rest to ROOTCINTDEFS
