@@ -243,6 +243,9 @@ class TTemplWaveform : public TObject {
       SetData<_Op>(aWF.GetData(), aWF.GetLength());
     }
 
+    TTemplWaveform( const TObject& aWF );
+    TTemplWaveform<_Tp>& operator=( const TObject& aWF);
+
     template<typename _Op>
     TTemplWaveform<_Tp>& operator=( const TTemplWaveform<_Op>&  aWF ) 
     {
@@ -255,6 +258,7 @@ class TTemplWaveform : public TObject {
 
     virtual ~TTemplWaveform() {}
  
+    //virtual Draw(Option_t *opt);
     virtual TH1D* GimmeHist(const std::string& label="", Option_t* opt = "") const;
     virtual void LoadIntoHist(TH1D& hist, Option_t* opt = "") const;
 
@@ -264,6 +268,8 @@ class TTemplWaveform : public TObject {
       TTemplWaveform<_Op> wf(*this);
       return wf;
     }
+
+    void ConvertFrom(const TObject& aWF);
 
     TTemplWaveform<_Tp> SubWaveform(size_t begin = 0, size_t end = (size_t)-1) const;
     void Append(const TTemplWaveform<_Tp>& wf); 

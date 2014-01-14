@@ -1,5 +1,6 @@
 #include "TH1D.h"
 #include "TROOT.h"
+#include "TClass.h"
 #include "TTemplWaveform.hh"
 #include <algorithm>
 //______________________________________________________________________________
@@ -274,6 +275,55 @@ void TTemplWaveform<_Tp>::Append(const TTemplWaveform<_Tp>& wf)
   }
   fData.insert( fData.end(), wf.GetVectorData().begin(), wf.GetVectorData().end() );
 }
+
+//______________________________________________________________________________
+#define SYNTHESIZE_CASE_TYPE_AND_INIT_CHECK(atype, aWF)            \
+  if (aWF.IsA()->InheritsFrom(TTemplWaveform<atype >::Class())) {\
+    const TTemplWaveform<atype >& refCast =                      \
+        static_cast<const TTemplWaveform<atype >&>(aWF);         \
+    MakeSimilarTo(refCast);                                        \
+    SetData(refCast.GetData(), refCast.GetLength());               \
+    return;  } 
+  
+
+//______________________________________________________________________________
+template<typename _Tp>
+TTemplWaveform<_Tp>::TTemplWaveform(const TObject& aWF)
+{
+  // A constructor that takes a TObject argument, purpose being to give
+  // accesibility to scripts, since both CINT and pyROOT don't handle
+  // templates. 
+  ConvertFrom(aWF);
+}
+
+//______________________________________________________________________________
+template<typename _Tp>
+TTemplWaveform<_Tp>& TTemplWaveform<_Tp>::operator=(const TObject& aWF)
+{
+  // An assignment operator that takes a TObject argument, purpose being to
+  // give accesibility to scripts, since both CINT and pyROOT don't handle
+  // templates. 
+  if (this == &aWF) return *this; 
+  ConvertFrom(aWF);
+  return *this;
+}
+
+//______________________________________________________________________________
+template<typename _Tp>
+void TTemplWaveform<_Tp>::ConvertFrom(const TObject& aWF)
+{
+  // Convert from the anput waveform
+  SYNTHESIZE_CASE_TYPE_AND_INIT_CHECK(Int_t, aWF)
+  SYNTHESIZE_CASE_TYPE_AND_INIT_CHECK(Double_t, aWF)
+  SYNTHESIZE_CASE_TYPE_AND_INIT_CHECK(Float_t, aWF)
+  SYNTHESIZE_CASE_TYPE_AND_INIT_CHECK(Char_t, aWF)
+  SYNTHESIZE_CASE_TYPE_AND_INIT_CHECK(unsigned long, aWF)
+  SYNTHESIZE_CASE_TYPE_AND_INIT_CHECK(unsigned int, aWF)
+  //SYNTHESIZE_CASE_TYPE_AND_INIT_CHECK(std::complex<double>, aWF)
+
+  std::cerr << "Input waveform type not recognized!" << std::endl;
+}
+
 
 //______________________________________________________________________________
 // The following are necessary to ensure that the above functions are generated.
