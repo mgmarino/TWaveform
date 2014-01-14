@@ -319,6 +319,7 @@ void TTemplWaveform<_Tp>::ConvertFrom(const TObject& aWF)
   SYNTHESIZE_CASE_TYPE_AND_INIT_CHECK(Char_t, aWF)
   SYNTHESIZE_CASE_TYPE_AND_INIT_CHECK(unsigned long, aWF)
   SYNTHESIZE_CASE_TYPE_AND_INIT_CHECK(unsigned int, aWF)
+  SYNTHESIZE_CASE_TYPE_AND_INIT_CHECK(unsigned short, aWF)
   //SYNTHESIZE_CASE_TYPE_AND_INIT_CHECK(std::complex<double>, aWF)
 
   std::cerr << "Input waveform type not recognized!" << std::endl;
