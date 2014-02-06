@@ -16,6 +16,8 @@ template<typename _Tp>
 class TTemplWaveform : public TObject {
    public:
   
+    typedef std::vector<_Tp> VecType;
+
     _Tp* GetData() 
     { 
       // Return a pointer to the internal data
@@ -28,13 +30,13 @@ class TTemplWaveform : public TObject {
       return (fData.size() > 0 ) ? &(fData)[0] : NULL; 
     }
 
-    std::vector<_Tp>& GetVectorData() 
+    VecType& GetVectorData() 
     { 
       // Return the vector data
       return fData; 
     }
 
-    const std::vector<_Tp>& GetVectorData() const 
+    const VecType& GetVectorData() const 
     { 
       // Return the vector data
       return fData; 
@@ -62,6 +64,13 @@ class TTemplWaveform : public TObject {
       // Return the length of the waveform
       return fData.size(); 
     }
+
+    size_t size() const
+    {
+      // Return the length, this gets mapped to __len__ by pyROOT
+      return GetLength();
+    }
+
 
     _Tp  At(size_t i) const 
     { 
@@ -318,10 +327,20 @@ class TTemplWaveform : public TObject {
     virtual size_t GetIndexAtTime(Double_t Time) const;
     virtual Double_t GetTimeAtIndex(size_t Index) const;
 
+    //////////////////////////////////////////////////////////
+    // Iterators
+    typedef typename VecType::iterator Iter;
+    typedef typename VecType::const_iterator CIter;
+    Iter  begin()       { return fData.begin(); }
+    CIter begin() const { return fData.begin(); }
+    Iter  end()         { return fData.end(); }
+    CIter end()   const { return fData.end(); }
+
+
   protected:
-    std::vector< _Tp >  fData;              // data  : Waveform data 
-    Double_t            fSampleFreq;        // Sampling frequency
-    Double_t            fTOffset;           // Time offset 
+    VecType   fData;              // data  : Waveform data 
+    Double_t  fSampleFreq;        // Sampling frequency
+    Double_t  fTOffset;           // Time offset 
 
   ClassDefT(TTemplWaveform,1)
 
