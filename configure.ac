@@ -156,7 +156,7 @@ AS_IF([test x"$with_fftw" = xyes],
       	 HAVE_FFTW=no])
         CPPFLAGS=$save_CPPFLAGS
         LDFLAGS=$save_LDFLAGS
-        LIBS=$save_LIBS])
+       ])
     ])
  ], [HAVE_FFTW=no])
 AS_IF([test x"$HAVE_FFTW" != xno],

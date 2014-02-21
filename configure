@@ -15940,7 +15940,7 @@ rm -f core conftest.err conftest.$ac_objext conftest_ipa8_conftest.oo \
       conftest$ac_exeext conftest.$ac_ext
         CPPFLAGS=$save_CPPFLAGS
         LDFLAGS=$save_LDFLAGS
-        LIBS=$save_LIBS
+
 fi
 
 
