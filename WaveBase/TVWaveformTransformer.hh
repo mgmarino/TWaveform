@@ -27,9 +27,6 @@ class TVWaveformTransformer
   public:
     // We require the derived classes to define their names since this is an important way to distinguish between
     // them.  
-    TVWaveformTransformer( const std::string& aTransformationName ) :
-      fName(aTransformationName)
-      { } 
     virtual ~TVWaveformTransformer() { }
   
     virtual bool IsInPlace() const = 0;
@@ -40,6 +37,10 @@ class TVWaveformTransformer
     const char* GetName() const { return fName.c_str(); }
     
   protected:
+   TVWaveformTransformer( const std::string& aTransformationName ) :
+      fName(aTransformationName)
+      { } 
+
     virtual void TransformInPlace(TDoubleWaveform& input) const;
     virtual void TransformOutOfPlace(const TDoubleWaveform& input, TDoubleWaveform& output) const;
   
