@@ -11,6 +11,10 @@
 #include <iostream> 
 #include <complex> 
 
+namespace TTemplWFUtil {
+    template <typename T> const T& identity(const T& val) { return val; }
+}
+
 class TH1D;
 template<typename _Tp>
 class TTemplWaveform : public TObject {
@@ -43,14 +47,20 @@ class TTemplWaveform : public TObject {
     }
 
 
-    template<typename _Tn>
-    void SetData( const _Tn* aData, size_t numberOfValues ) 
+    template<typename _Tn, class _Function>
+    void SetData( const _Tn* aData, size_t numberOfValues, _Function conversion) 
     { 
       // Set the data by inputting an array
       // The following handles all basic types.
       //fData.assign( aData, aData + numberOfValues ); 
       SetLength(numberOfValues);
-      for (size_t i = 0; i < numberOfValues; i++) fData[i] = static_cast<_Tp>(aData[i]);
+      for (size_t i = 0; i < numberOfValues; i++) fData[i] = static_cast<_Tp>(conversion(aData[i]));
+    }
+
+    template<typename _Tn>
+    void SetData( const _Tn* aData, size_t numberOfValues) 
+    {
+      SetData(aData, numberOfValues, TTemplWFUtil::identity<_Tn>);
     }
 
     void SetLength( size_t length ) 
