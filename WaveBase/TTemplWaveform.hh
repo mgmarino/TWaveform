@@ -114,11 +114,10 @@ class TTemplWaveform : public TObject {
                GetTOffset() == other.GetTOffset() );
     }
 
-    void MakeSimilarTo(const TTemplWaveform<_Tp>& other)
+    template<typename _Op>
+    void MakeSimilarTo(const TTemplWaveform<_Op>& other)
     {
-      // Make this waveform similar to the input.  Defined only for like
-      // waveforms, it doesn't make sense for waveforms with different types to
-      // be similar.
+      // Make this waveform similar to the input.  
       SetLength(other.GetLength());
       SetSamplingFreq(other.GetSamplingFreq());
       SetTOffset(other.GetTOffset());
