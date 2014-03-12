@@ -287,8 +287,8 @@ class TTemplWaveform : public TObject {
       return wf;
     }
 
-    void ConvertFrom(const TObject& aWF);
-
+    void ConvertFrom(const TObject& aWF, Option_t* opt = "");
+    
     TTemplWaveform<_Tp> SubWaveform(size_t begin = 0, size_t end = (size_t)-1) const;
     void Append(const TTemplWaveform<_Tp>& wf); 
 

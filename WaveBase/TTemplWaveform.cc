@@ -310,9 +310,21 @@ TTemplWaveform<_Tp>& TTemplWaveform<_Tp>::operator=(const TObject& aWF)
 
 //______________________________________________________________________________
 template<typename _Tp>
-void TTemplWaveform<_Tp>::ConvertFrom(const TObject& aWF)
+void TTemplWaveform<_Tp>::ConvertFrom(const TObject& aWF, Option_t* opt)
 {
   // Convert from the anput waveform
+  //
+  // Note, if a complex waveform is passed in, one can determine if reals,
+  // imaginary, or absolute values are returned, by passing one the following
+  // options in:
+  //
+  //   "real", "imag", "abs"
+  //
+  // e.g. 
+  //   TDoubleWaveform wf;
+  //   TWaveformFT wf_ft;
+  //   wf.ConvertFrom(wf_ft, "real");
+  //   // would yield reals
   SYNTHESIZE_CASE_TYPE_AND_INIT_CHECK(Int_t, aWF)
   SYNTHESIZE_CASE_TYPE_AND_INIT_CHECK(Double_t, aWF)
   SYNTHESIZE_CASE_TYPE_AND_INIT_CHECK(Float_t, aWF)
@@ -320,6 +332,23 @@ void TTemplWaveform<_Tp>::ConvertFrom(const TObject& aWF)
   SYNTHESIZE_CASE_TYPE_AND_INIT_CHECK(unsigned long, aWF)
   SYNTHESIZE_CASE_TYPE_AND_INIT_CHECK(unsigned int, aWF)
   SYNTHESIZE_CASE_TYPE_AND_INIT_CHECK(unsigned short, aWF)
+  if (aWF.IsA()->InheritsFrom(TWaveformFT::Class())) {
+    TString option = opt;
+    option.ToLower();
+	const TWaveformFT& refCast = static_cast<const TWaveformFT&>(aWF);
+    MakeSimilarTo(refCast);
+    if (option == "real") {
+       SetData(refCast.GetData(), refCast.GetLength(), std::real<double>); 
+    } else if (option == "imag") {
+       SetData(refCast.GetData(), refCast.GetLength(), std::imag<double>); 
+    } else if (option == "abs") {
+       SetData(refCast.GetData(), refCast.GetLength(), std::abs<double>); 
+    } else {
+      std::cerr << "Option: " << opt << " not recognized" << std::endl;
+      std::cerr << "  Must be, 'real', 'imag', or 'abs' " << std::endl;
+    } 
+    return;  
+  } 
   //SYNTHESIZE_CASE_TYPE_AND_INIT_CHECK(std::complex<double>, aWF)
 
   std::cerr << "Input waveform type not recognized!" << std::endl;
