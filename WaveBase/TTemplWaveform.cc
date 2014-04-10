@@ -308,6 +308,23 @@ TTemplWaveform<_Tp>& TTemplWaveform<_Tp>::operator=(const TObject& aWF)
   return *this;
 }
 
+#if __cplusplus >= 201103L
+  #define REALFUNC std::real<double>
+  #define IMAGFUNC std::imag<double>
+  #define ABSFUNC  std::abs<double>
+#else
+static double real_func ( const std::complex<double> & x) 
+{ return std::real(x); }
+static double imag_func ( const std::complex<double> & x) 
+{ return std::imag(x); }
+static double abs_func ( const std::complex<double> & x) 
+{ return std::abs(x); }
+  #define REALFUNC real_func 
+  #define IMAGFUNC imag_func 
+  #define ABSFUNC  abs_func 
+#endif
+
+
 //______________________________________________________________________________
 template<typename _Tp>
 void TTemplWaveform<_Tp>::ConvertFrom(const TObject& aWF, Option_t* opt)
@@ -338,11 +355,11 @@ void TTemplWaveform<_Tp>::ConvertFrom(const TObject& aWF, Option_t* opt)
 	const TWaveformFT& refCast = static_cast<const TWaveformFT&>(aWF);
     MakeSimilarTo(refCast);
     if (option == "real") {
-       SetData(refCast.GetData(), refCast.GetLength(), std::real<double>); 
+       SetData(refCast.GetData(), refCast.GetLength(), REALFUNC); 
     } else if (option == "imag") {
-       SetData(refCast.GetData(), refCast.GetLength(), std::imag<double>); 
+       SetData(refCast.GetData(), refCast.GetLength(), IMAGFUNC); 
     } else if (option == "abs") {
-       SetData(refCast.GetData(), refCast.GetLength(), std::abs<double>); 
+       SetData(refCast.GetData(), refCast.GetLength(), ABSFUNC); 
     } else {
       std::cerr << "Option: " << opt << " not recognized" << std::endl;
       std::cerr << "  Must be, 'real', 'imag', or 'abs' " << std::endl;
