@@ -262,6 +262,7 @@ TTemplWaveform<_Tp> TTemplWaveform<_Tp>::SubWaveform(size_t begin, size_t end) c
   TTemplWaveform<_Tp> wf;
   wf.MakeSimilarTo(*this);
   wf.SetData(GetData() + begin, (end-begin));
+  wf.SetTOffset(GetTOffset() + begin*GetSamplingPeriod());
   return wf;
 }
 
