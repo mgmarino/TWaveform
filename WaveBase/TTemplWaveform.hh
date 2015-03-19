@@ -97,10 +97,16 @@ class TTemplWaveform : public TObject {
       return fData[i]; 
     }
 
-    void Zero()
+    void Zero(size_t beg = 0, size_t end = (size_t)-1)
     { 
       // Zero the waveform
-      fData.assign(fData.size(), 0);
+      size_t e = (end > GetLength()) ? GetLength() : end;
+      if (beg >= e) return;
+      if (beg == 0 && e == GetLength()) {
+        fData.assign(fData.size(), _Tp(0));
+      } else {
+        for (size_t i=beg;i<e;i++) fData[i] *= 0; 
+      }
     }
 
 
