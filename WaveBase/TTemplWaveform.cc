@@ -377,6 +377,7 @@ void TTemplWaveform<_Tp>::ConvertFrom(const TObject& aWF, Option_t* opt)
 // The following are necessary to ensure that the above functions are generated.
 template class TTemplWaveform<Int_t>; 
 template class TTemplWaveform<UShort_t>; 
+template class TTemplWaveform<Short_t>; 
 template class TTemplWaveform<Double_t>; 
 template class TTemplWaveform<Float_t>; 
 template class TTemplWaveform<Char_t>; 

@@ -5,6 +5,7 @@
 #pragma link C++ class TTemplWaveform<Float_t>+;
 #pragma link C++ class TTemplWaveform<Int_t>+;
 #pragma link C++ class TTemplWaveform<UShort_t>+;
+#pragma link C++ class TTemplWaveform<Short_t>+;
 #pragma link C++ class TTemplWaveform<complex<double> >+;
 #pragma link C++ class TTemplWaveform<unsigned long>+;
 #pragma link C++ class TTemplWaveform<unsigned int>+;
