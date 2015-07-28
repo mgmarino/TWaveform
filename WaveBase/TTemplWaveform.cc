@@ -19,7 +19,7 @@
 //  Visualization of the class is handled by GimmeHist() which returns a
 //  TH1D.  For example:
 //
-//    TDoubleWaveform wf; 
+//    TDoubleWaveform wf;
 //    wf.GimmeHist().Draw();
 //
 //  It is also possible (and desirable) to pass in a TH1D that the waveform
@@ -31,15 +31,15 @@
 //  This is preferable because it makes it obvious who owns the histogram.
 //  TWaveformFT also allows options to be passed in:
 //
-//    GimmeHist("", "Real") or LoadIntoHist(hist, "Real") // return Hist with Reals 
+//    GimmeHist("", "Real") or LoadIntoHist(hist, "Real") // return Hist with Reals
 //    GimmeHist("", "Imag") or LoadIntoHist(hist, "Imag") // return Hist with
-//                                                        // Imaginary components 
+//                                                        // Imaginary components
 //    GimmeHist("", "Abs") or LoadIntoHist(hist, "Abs")   // return Hist with
-//                                                        // Absolute value 
-// 
+//                                                        // Absolute value
+//
 //  Automatic conversion is also possible.  To go from an integer to a double
-//  waveform, just do: 
-// 
+//  waveform, just do:
+//
 //  TIntWaveform intWF;
 //  TDoubleWaveform doubleWF = intWF;
 //
@@ -75,16 +75,16 @@ TH1D* TTemplWaveform<_Tp>::GimmeHist(const std::string& label, Option_t* opt) co
 
   TDirectory* tmpDirectory = gDirectory;
   gROOT->cd();
-  TH1D* hist = dynamic_cast< TH1D* >( 
+  TH1D* hist = dynamic_cast< TH1D* >(
       gROOT->FindObject(("TWaveformHist_" +  label).c_str()) );
   if(hist == NULL) {
-    hist = new 
+    hist = new
       TH1D(("TWaveformHist_" + label).c_str(), "", 1, 0, 1);
   }
   LoadIntoHist(*hist, opt);
   tmpDirectory->cd();
   return hist;
-}			    
+}
 
 //______________________________________________________________________________
 template<typename _Tp>
@@ -98,8 +98,8 @@ void TTemplWaveform<_Tp>::LoadIntoHist(TH1D& hist, Option_t* /*opt*/) const
   hist.SetMinimum(-1111);
   hist.SetTitle(GetName());
   double bin_width = GetSamplingPeriod()/CLHEP::microsecond;
-  hist.SetBins(GetLength(), GetMinTime()/CLHEP::microsecond - 0.5*bin_width, 
-                            GetMaxTime()/CLHEP::microsecond - 0.5*bin_width);  
+  hist.SetBins(GetLength(), GetMinTime()/CLHEP::microsecond - 0.5*bin_width,
+                            GetMaxTime()/CLHEP::microsecond - 0.5*bin_width);
   hist.SetXTitle("t [#mus]");
   hist.SetYTitle("ADC Units");
   hist.SetOption("L");
@@ -116,12 +116,12 @@ _Tp TTemplWaveform<_Tp>::Sum( size_t start, size_t stop) const
   // Get the sum of the waveform beginning at position start (including start)
   // and ending at stop (*not* including stop).  Default is to sum the entire
   // waveform.  This is equivalent to:
-  // 
-  // val = 0; 
+  //
+  // val = 0;
   // for (i=start;i<stop;i++) val += wf[i];
-  if ( stop > GetLength() ) stop = GetLength(); 
+  if ( stop > GetLength() ) stop = GetLength();
   _Tp temp(0);
-  for (size_t i=start;i<stop;i++) temp += (*this)[i]; 
+  for (size_t i=start;i<stop;i++) temp += (*this)[i];
   return temp;
 
 }
@@ -134,7 +134,7 @@ _Tp TTemplWaveform<_Tp>::StdDevSquared( size_t start, size_t stop) const
   // ending at stop.  Default is to sum the entire waveform.  This is
   // equivalent to:
   //
-  // val = 0; 
+  // val = 0;
   // avg = Sum(start, stop);
   // for (i=start;i<stop;i++) val += wf[i]*wf[i];
   // return val/(stop - start) - avg*avg;
@@ -146,12 +146,12 @@ _Tp TTemplWaveform<_Tp>::StdDevSquared( size_t start, size_t stop) const
   for (size_t i=start;i<stop;i++) temp += ((*this)[i])*((*this)[i]);
   return temp/(stop-start) - avg*avg;
 }
- 
+
 //______________________________________________________________________________
 template<>
 CDbl TTemplWaveform<CDbl>::StdDevSquared( size_t /*start*/, size_t /*stop*/) const
 {
-  // Disable this for complex numbers.  
+  // Disable this for complex numbers.
   return CDbl();
 }
 
@@ -172,25 +172,25 @@ void TTemplWaveform<CDbl>::LoadIntoHist(TH1D& hist, Option_t* opt) const
   }
   double nyquist_frequency = 0.5*GetSamplingFreq()/CLHEP::megahertz;
   double bin_width = nyquist_frequency/(GetLength() - 1);
-  hist.SetBins(GetLength(), -0.5*bin_width, nyquist_frequency + 0.5*bin_width);  
+  hist.SetBins(GetLength(), -0.5*bin_width, nyquist_frequency + 0.5*bin_width);
   hist.SetXTitle("f [MHz]");
   hist.SetOption("L");
 
   TString option = opt;
   option.ToLower();
   if (option.Contains("real")) {
-    // Plot reals 
+    // Plot reals
     hist.SetYTitle("Real (ADC Units)");
     for(size_t iSample = 0; iSample < GetLength(); iSample++) {
       hist.SetBinContent(iSample+1, At(iSample).real());
     }
   } else if (option.Contains("imag")) {
-    // Plot imag 
+    // Plot imag
     hist.SetYTitle("Imaginary (ADC Units)");
     for(size_t iSample = 0; iSample < GetLength(); iSample++) {
       hist.SetBinContent(iSample+1, At(iSample).imag());
     }
-  } else { 
+  } else {
     // Default is abs
     hist.SetYTitle("Abs (ADC Units)");
     for(size_t iSample = 0; iSample < GetLength(); iSample++) {
@@ -244,9 +244,9 @@ _Tp TTemplWaveform<_Tp>::InterpolateAtPoint( Double_t time ) const
 
   // Now do linear interpolation
   frac_entry -= entry;
-  return (_Tp)((1.0-frac_entry)*At(entry) + frac_entry*At(entry+1)); 
+  return (_Tp)((1.0-frac_entry)*At(entry) + frac_entry*At(entry+1));
 
-} 
+}
 
 //______________________________________________________________________________
 template<typename _Tp>
@@ -268,7 +268,7 @@ TTemplWaveform<_Tp> TTemplWaveform<_Tp>::SubWaveform(size_t begin, size_t end) c
 
 //______________________________________________________________________________
 template<typename _Tp>
-void TTemplWaveform<_Tp>::Append(const TTemplWaveform<_Tp>& wf) 
+void TTemplWaveform<_Tp>::Append(const TTemplWaveform<_Tp>& wf)
 {
   if (wf.GetSamplingFreq() != GetSamplingFreq() ) {
     std::cerr << "Cannot append waveforms with different frequencies" << std::endl;
@@ -284,8 +284,8 @@ void TTemplWaveform<_Tp>::Append(const TTemplWaveform<_Tp>& wf)
         static_cast<const TTemplWaveform<atype >&>(aWF);         \
     MakeSimilarTo(refCast);                                        \
     SetData(refCast.GetData(), refCast.GetLength());               \
-    return;  } 
-  
+    return;  }
+
 
 //______________________________________________________________________________
 template<typename _Tp>
@@ -293,7 +293,7 @@ TTemplWaveform<_Tp>::TTemplWaveform(const TObject& aWF)
 {
   // A constructor that takes a TObject argument, purpose being to give
   // accesibility to scripts, since both CINT and pyROOT don't handle
-  // templates. 
+  // templates.
   ConvertFrom(aWF);
 }
 
@@ -303,8 +303,8 @@ TTemplWaveform<_Tp>& TTemplWaveform<_Tp>::operator=(const TObject& aWF)
 {
   // An assignment operator that takes a TObject argument, purpose being to
   // give accesibility to scripts, since both CINT and pyROOT don't handle
-  // templates. 
-  if (this == &aWF) return *this; 
+  // templates.
+  if (this == &aWF) return *this;
   ConvertFrom(aWF);
   return *this;
 }
@@ -314,15 +314,15 @@ TTemplWaveform<_Tp>& TTemplWaveform<_Tp>::operator=(const TObject& aWF)
   #define IMAGFUNC std::imag<double>
   #define ABSFUNC  std::abs<double>
 #else
-static double real_func ( const std::complex<double> & x) 
+static double real_func ( const std::complex<double> & x)
 { return std::real(x); }
-static double imag_func ( const std::complex<double> & x) 
+static double imag_func ( const std::complex<double> & x)
 { return std::imag(x); }
-static double abs_func ( const std::complex<double> & x) 
+static double abs_func ( const std::complex<double> & x)
 { return std::abs(x); }
-  #define REALFUNC real_func 
-  #define IMAGFUNC imag_func 
-  #define ABSFUNC  abs_func 
+  #define REALFUNC real_func
+  #define IMAGFUNC imag_func
+  #define ABSFUNC  abs_func
 #endif
 
 
@@ -338,7 +338,7 @@ void TTemplWaveform<_Tp>::ConvertFrom(const TObject& aWF, Option_t* opt)
   //
   //   "real", "imag", "abs"
   //
-  // e.g. 
+  // e.g.
   //   TDoubleWaveform wf;
   //   TWaveformFT wf_ft;
   //   wf.ConvertFrom(wf_ft, "real");
@@ -356,17 +356,17 @@ void TTemplWaveform<_Tp>::ConvertFrom(const TObject& aWF, Option_t* opt)
 	const TWaveformFT& refCast = static_cast<const TWaveformFT&>(aWF);
     MakeSimilarTo(refCast);
     if (option == "real") {
-       SetData(refCast.GetData(), refCast.GetLength(), REALFUNC); 
+       SetData(refCast.GetData(), refCast.GetLength(), REALFUNC);
     } else if (option == "imag") {
-       SetData(refCast.GetData(), refCast.GetLength(), IMAGFUNC); 
+       SetData(refCast.GetData(), refCast.GetLength(), IMAGFUNC);
     } else if (option == "abs") {
-       SetData(refCast.GetData(), refCast.GetLength(), ABSFUNC); 
+       SetData(refCast.GetData(), refCast.GetLength(), ABSFUNC);
     } else {
       std::cerr << "Option: " << opt << " not recognized" << std::endl;
       std::cerr << "  Must be, 'real', 'imag', or 'abs' " << std::endl;
-    } 
-    return;  
-  } 
+    }
+    return;
+  }
   //SYNTHESIZE_CASE_TYPE_AND_INIT_CHECK(std::complex<double>, aWF)
 
   std::cerr << "Input waveform type not recognized!" << std::endl;
@@ -375,12 +375,13 @@ void TTemplWaveform<_Tp>::ConvertFrom(const TObject& aWF, Option_t* opt)
 
 //______________________________________________________________________________
 // The following are necessary to ensure that the above functions are generated.
-template class TTemplWaveform<Int_t>; 
-template class TTemplWaveform<UShort_t>; 
-template class TTemplWaveform<Short_t>; 
-template class TTemplWaveform<Double_t>; 
-template class TTemplWaveform<Float_t>; 
-template class TTemplWaveform<Char_t>; 
-template class TTemplWaveform<unsigned long>; 
-template class TTemplWaveform<unsigned int>; 
-template class TTemplWaveform<std::complex<double> >; 
+template class TTemplWaveform<Int_t>;
+template class TTemplWaveform<UShort_t>;
+template class TTemplWaveform<Short_t>;
+template class TTemplWaveform<Double_t>;
+template class TTemplWaveform<Float_t>;
+template class TTemplWaveform<Char_t>;
+template class TTemplWaveform<unsigned long>;
+template class TTemplWaveform<unsigned int>;
+template class TTemplWaveform<std::complex<double> >;
+
