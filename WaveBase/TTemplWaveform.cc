@@ -344,6 +344,7 @@ void TTemplWaveform<_Tp>::ConvertFrom(const TObject& aWF, Option_t* opt)
   //   wf.ConvertFrom(wf_ft, "real");
   //   // would yield reals
   SYNTHESIZE_CASE_TYPE_AND_INIT_CHECK(Int_t, aWF)
+  SYNTHESIZE_CASE_TYPE_AND_INIT_CHECK(Short_t, aWF)
   SYNTHESIZE_CASE_TYPE_AND_INIT_CHECK(Double_t, aWF)
   SYNTHESIZE_CASE_TYPE_AND_INIT_CHECK(Float_t, aWF)
   SYNTHESIZE_CASE_TYPE_AND_INIT_CHECK(Char_t, aWF)
