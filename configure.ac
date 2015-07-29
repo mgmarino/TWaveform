@@ -154,10 +154,12 @@ AS_IF([test x"$with_fftw" = xyes],
       	[AC_MSG_RESULT(yes)],
       	[AC_MSG_RESULT(no)
       	 HAVE_FFTW=no])
+       ])
+      AS_IF([test x"$HAVE_FFTW" != xyes], [
         CPPFLAGS=$save_CPPFLAGS
         LDFLAGS=$save_LDFLAGS
         LIBS=$save_LIBS
-       ])
+      ])
     ])
  ], [HAVE_FFTW=no])
 AS_IF([test x"$HAVE_FFTW" != xno],
