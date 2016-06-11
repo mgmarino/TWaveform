@@ -309,7 +309,8 @@ TTemplWaveform<_Tp>& TTemplWaveform<_Tp>::operator=(const TObject& aWF)
   return *this;
 }
 
-#if __cplusplus >= 201103L
+#if __cplusplus >= 201103L && ( (!defined(__GNUC__)) || (__GNUC__ > 4) || (__GNUC__ == 4 && __GNUC_MINOR__ >= 9) )
+  // The GCC version check is to workaround GCC 4.8.3 from RHEL7
   #define REALFUNC std::real<double>
   #define IMAGFUNC std::imag<double>
   #define ABSFUNC  std::abs<double>
