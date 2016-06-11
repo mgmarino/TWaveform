@@ -105,7 +105,11 @@ TFastFourierTransformFFTW& TFastFourierTransformFFTW::GetFFT( size_t length )
 {
   FFTMap::iterator iter;
   if ( (iter = fMap.find(length)) == fMap.end() ) {
+#if __cplusplus >= 201103L
+      iter = fMap.emplace(length,TFastFourierTransformFFTW(length)).first;
+#else
       iter = fMap.insert(std::make_pair(length,TFastFourierTransformFFTW(length))).first;
+#endif
   }
   return iter->second;
 }
